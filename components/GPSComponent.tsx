@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
+import { useLinkProps } from '@react-navigation/native';
 
-export default function GPSComponent() {
-  const [location, setLocation] = useState(null);
+export default function GPSComponent(props) {
   const [errorMsg, setErrorMsg] = useState(null);
+  const location = props.location;
+  const setLocation = props.setLocation;
+
 
   useEffect(() => {
+
+    //todo this might waste too much battery or might be fine
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {

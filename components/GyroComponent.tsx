@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 
-export default function GyroComponent() {
-  const [data, setData] = useState({});
-
+export default function GyroComponent(props) {
+  const data = props.data;
+  const setData = props.setData;
+  let _subscription = false;
   useEffect(() => {
-    _toggle();
+    _subscribe();
   }, []);
 
   useEffect(() => {
@@ -15,33 +16,15 @@ export default function GyroComponent() {
     };
   }, []);
 
-  const _toggle = () => {
-    if (this.hasOwnProperty('_subscription') &&  this._subscription) {
-      _unsubscribe();
-    } else {
-      _subscribe();
-    }
-  };
-
-  const _slow = () => {
-    Gyroscope.setUpdateInterval(1000);
-  };
-
-  const _fast = () => {
-    Gyroscope.setUpdateInterval(16);
-  };
-
   const _subscribe = () => {
-    this._subscription = Gyroscope.addListener(gyroscopeData => {
+    Gyroscope.setUpdateInterval(100);
+    _subscription = Gyroscope.addListener(gyroscopeData => {
       setData(gyroscopeData);
     });
   };
 
   const _unsubscribe = () => {
-    if (this.hasOwnProperty('_subscription') &&  this._subscription) {
-      this._subscription && this._subscription.remove();
-    }
-    this._subscription = null;
+    _subscription.remove();
   };
 
   let { x, y, z } = data;
@@ -51,18 +34,7 @@ export default function GyroComponent() {
       <Text style={styles.text}>
         x: {round(x)} y: {round(y)} z: {round(z)}
       </Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={_toggle} style={styles.button}>
-          <Text>Toggle</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={_slow} style={[styles.button, styles.middleButton]}>
-          <Text>Slow</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={_fast} style={styles.button}>
-          <Text>Fast</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </View >
   );
 }
 
