@@ -11,17 +11,20 @@ export default function GPSComponent(props) {
 
   useEffect(() => {
 
-    //todo this might waste too much battery or might be fine
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
     })();
-  });
+
+
+    //todo this might waste too much battery or might be fine
+    setInterval(function () {
+      (async () => {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      })();
+    }, 100);
+  }, []);
 
   let text = 'Waiting..';
   if (errorMsg) {
